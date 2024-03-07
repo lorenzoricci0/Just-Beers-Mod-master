@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "justbeersmod:block/keg"
+    },
+    "facing=south": {
+      "model": "justbeersmod:block/keg",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "justbeersmod:block/keg",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "justbeersmod:block/keg",
+      "y": 90
+    }
+  }
+}

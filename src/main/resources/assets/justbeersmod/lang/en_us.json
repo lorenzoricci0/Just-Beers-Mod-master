@@ -1,0 +1,16 @@
+{
+  "block.justbeersmod.keg": "Keg",
+
+  "item.justbeersmod.mug": "Empty Mug",
+  "item.justbeersmod.wheat_beer": "Wheat Beer",
+  "item.justbeersmod.strong_beer": "Strong Beer",
+  "item.justbeersmod.sweet_beer": "Sweet Beer",
+  "item.justbeersmod.miner_beer": "The Miner's Choice",
+  "item.justbeersmod.blazing_beer": "The Hottest Ale",
+  "item.justbeersmod.frost_beer": "The Cold Widow",
+  "item.justbeersmod.apple_beer": "The Fruit of Labor",
+  "item.justbeersmod.pumpkin_beer": "The Reaper's of Choice",
+  "item.justbeersmod.berry_beer": "The Nature's Call",
+
+  "itemGroup.justbeersmod.just_beers": "Just Beers"
+}
