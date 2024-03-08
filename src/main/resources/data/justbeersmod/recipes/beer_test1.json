@@ -1,0 +1,14 @@
+{
+  "type": "keg",
+  "ingredients":[
+      {
+        "item": "justbeersmod:mug"
+      },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "output": {
+    "item": "justbeersmod:apple_beer"
+  }
+}

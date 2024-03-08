@@ -1,6 +1,7 @@
 package net.carlo.justbeersmod;
 
 import net.carlo.justbeersmod.block.ModBlocks;
+import net.carlo.justbeersmod.block.entity.ModBlockEntities;
 import net.carlo.justbeersmod.item.ModItems;
 import net.carlo.justbeersmod.recipe.ModRecipes;
 import net.carlo.justbeersmod.screen.ModScreenHandlers;
@@ -17,6 +18,7 @@ public class JustBeersMod implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
 		ModRecipes.registerRecipes();
+		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerAllScreenHandlers();
 	}
 }
