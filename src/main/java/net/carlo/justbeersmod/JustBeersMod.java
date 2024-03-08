@@ -2,6 +2,8 @@ package net.carlo.justbeersmod;
 
 import net.carlo.justbeersmod.block.ModBlocks;
 import net.carlo.justbeersmod.item.ModItems;
+import net.carlo.justbeersmod.recipe.ModRecipes;
+import net.carlo.justbeersmod.screen.ModScreenHandlers;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,5 +16,7 @@ public class JustBeersMod implements ModInitializer {
 	public void onInitialize() {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
+		ModRecipes.registerRecipes();
+		ModScreenHandlers.registerAllScreenHandlers();
 	}
 }
