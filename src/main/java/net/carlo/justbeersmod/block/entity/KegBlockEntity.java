@@ -119,9 +119,13 @@ public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFac
 
 
         if (hasRecipe(entity)) {
+            entity.removeStack(0, 1);
             entity.removeStack(1, 1);
+            entity.removeStack(2, 1);
+            entity.removeStack(3, 1);
+            entity.removeStack(4, 1);
             entity.setStack(6, new ItemStack(recipe.get().getOutput().getItem(),
-                    entity.getStack(2).getCount() + 1));
+                    entity.getStack(6).getCount() + 1));
             entity.resetProgress();
         }
     }
@@ -132,11 +136,11 @@ public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFac
             inventory.setStack(i, entity.getStack(i));
         }
 
-        Optional<KegRecipe> match = entity.getWorld().getRecipeManager()
+        Optional<KegRecipe> matches = entity.getWorld().getRecipeManager()
                 .getFirstMatch(KegRecipe.Type.INSTANCE, inventory, entity.getWorld());
 
-        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-                && canInsertItemIntoOutputSlot(inventory, match.get().getOutput().getItem());
+        return matches.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+                && canInsertItemIntoOutputSlot(inventory, matches.get().getOutput().getItem());
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleInventory inventory, Item output) {
