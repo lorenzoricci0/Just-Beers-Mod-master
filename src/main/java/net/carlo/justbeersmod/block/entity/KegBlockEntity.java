@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(6, ItemStack.EMPTY);
+
+
+    public static final int INVENTORY_SIZE = 6;
+    public static final int WHEAT_SLOT= 0;
+    public static final int SUGAR_SLOT = 1;
+    public static final int WATER_SLOT = 2;
+    public static final int INGREDIENT_SLOT = 3;
+    public static final int MUG_SLOT = 4;
+    public static final int OUTPUT_SLOT = 5;
+
+
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(INVENTORY_SIZE, ItemStack.EMPTY);
 
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
@@ -119,12 +131,12 @@ public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFac
 
 
         if (hasRecipe(entity)) {
-            entity.removeStack(0, 1);
-            entity.removeStack(1, 1);
-            entity.removeStack(2, 1);
-            entity.removeStack(3, 1);
-            entity.removeStack(4, 1);
-            entity.setStack(6, new ItemStack(recipe.get().getOutput().getItem(),
+            entity.removeStack(WHEAT_SLOT, 1);
+            entity.removeStack(SUGAR_SLOT, 1);
+            entity.removeStack(WATER_SLOT, 1);
+            entity.removeStack(INGREDIENT_SLOT, 1);
+            entity.removeStack(MUG_SLOT, 1);
+            entity.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput().getItem(),
                     entity.getStack(6).getCount() + 1));
             entity.resetProgress();
         }
@@ -136,11 +148,11 @@ public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFac
             inventory.setStack(i, entity.getStack(i));
         }
 
-        Optional<KegRecipe> matches = entity.getWorld().getRecipeManager()
+        Optional<KegRecipe> match = entity.getWorld().getRecipeManager()
                 .getFirstMatch(KegRecipe.Type.INSTANCE, inventory, entity.getWorld());
 
-        return matches.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-                && canInsertItemIntoOutputSlot(inventory, matches.get().getOutput().getItem());
+        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+                && canInsertItemIntoOutputSlot(inventory, match.get().getOutput().getItem());
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleInventory inventory, Item output) {

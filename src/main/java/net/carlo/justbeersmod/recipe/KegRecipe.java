@@ -2,6 +2,7 @@ package net.carlo.justbeersmod.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.carlo.justbeersmod.block.entity.KegBlockEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -29,11 +30,11 @@ public class KegRecipe implements Recipe<SimpleInventory> {
             return false;
         }
 
-        return recipeItems.get(0).test(inventory.getStack(0)) &&
-                recipeItems.get(1).test(inventory.getStack(1)) &&
-                recipeItems.get(2).test(inventory.getStack(2)) &&
-                recipeItems.get(3).test(inventory.getStack(3)) &&
-                recipeItems.get(4).test(inventory.getStack(4));
+        return recipeItems.get(0).test(inventory.getStack(KegBlockEntity.WHEAT_SLOT)) &&
+                recipeItems.get(1).test(inventory.getStack(KegBlockEntity.SUGAR_SLOT)) &&
+                recipeItems.get(2).test(inventory.getStack(KegBlockEntity.WATER_SLOT)) &&
+                recipeItems.get(3).test(inventory.getStack(KegBlockEntity.INGREDIENT_SLOT)) &&
+                recipeItems.get(4).test(inventory.getStack(KegBlockEntity.MUG_SLOT));
     }
 
     @Override
@@ -67,9 +68,7 @@ public class KegRecipe implements Recipe<SimpleInventory> {
     }
 
     public static class Type implements RecipeType<KegRecipe> {
-        private Type() {
-        }
-
+        private Type() { }
         public static final Type INSTANCE = new Type();
         public static final String ID = "keg";
     }
