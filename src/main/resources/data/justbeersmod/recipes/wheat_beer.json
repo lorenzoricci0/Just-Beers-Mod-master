@@ -1,23 +1,14 @@
 {
   "type": "justbeersmod:keg",
-  "ingredients": [
-    {
-      "item": "justbeersmod:mug"
-    },
-    {
-      "item": "justbeersmod:mug"
-    },
-    {
-      "item": "justbeersmod:mug"
-    },
-    {
-      "item": "justbeersmod:mug"
-    },
-    {
-      "item": "justbeersmod:mug"
-    }
-  ],
-  "output": {
-    "item": "justbeersmod:wheat_beer"
-  }
+  "inputA" : {
+    "item": "justbeersmod:mug"
+  },
+  "inputB": {
+    "tag": "minecraft:wheat"
+  },
+  "inputC": {
+    "tag": "minecraft:sugar"
+  },
+  "outputItem": "justbeersmod:wheat_beer",
+  "outputAmount": "1"
 }

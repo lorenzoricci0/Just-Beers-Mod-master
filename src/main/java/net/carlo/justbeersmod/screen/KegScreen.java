@@ -43,7 +43,7 @@ public class KegScreen extends HandledScreen<KegScreenHandler> {
     }
     private void renderProgressArrow(MatrixStack matrices, int x, int y) {
         if(handler.isCrafting()) {
-            drawTexture(matrices, x + 59, y + 29, 176, 0, handler.getScaledProgress(), 8);
+            drawTexture(matrices, x + 59, y + 28, 176, 0, handler.getScaledProgress(), 8);
         }
     }
 }
