@@ -12,5 +12,22 @@
   "item.justbeersmod.pumpkin_beer": "The Reaper's of Choice",
   "item.justbeersmod.berry_beer": "The Nature's Call",
 
+  "item.justbeersmod.wheat_and_sugar_compound": "Wheat and Sugar Compound",
+  "item.justbeersmod.strong_compound": "Strong Compound",
+  "item.justbeersmod.sweet_compound": "Sweet Compound",
+  "item.justbeersmod.miner_compound": "Miner Compound",
+  "item.justbeersmod.blazing_compound": "Blazing Compound",
+  "item.justbeersmod.frost_compound": "Frost Compound",
+  "item.justbeersmod.apple_compound": "Apple Compound",
+  "item.justbeersmod.pumpkin_compound": "Pumpkin Compound",
+  "item.justbeersmod.berry_compound": "Berry Compound",
+
+
+
+
+
+
+
+
   "itemGroup.justbeersmod.just_beers": "Just Beers"
 }

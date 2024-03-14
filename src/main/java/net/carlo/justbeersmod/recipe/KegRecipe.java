@@ -1,82 +1,51 @@
 package net.carlo.justbeersmod.recipe;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.carlo.justbeersmod.block.entity.KegBlockEntity;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class KegRecipe implements Recipe<SimpleInventory> {
-
-
-    private final Ingredient inputA;
-    private final Ingredient inputB;
-    private final Ingredient inputC;
-    private final Ingredient inputD;
-    private final Ingredient inputE;
     private final Identifier id;
-    private final ItemStack result;
+    private final ItemStack output;
+    private final DefaultedList<Ingredient> recipeItems;
 
-    public KegRecipe(Ingredient inputA, Ingredient inputB, Ingredient inputC, Ingredient inputD, Ingredient inputE,
-                     ItemStack result, Identifier id) {
-        this.inputA = inputA;
-        this.inputB = inputB;
-        this.inputC = inputC;
-        this.inputD = inputD;
-        this.inputE = inputE;
-        this.result = result;
+    public KegRecipe(Identifier id, ItemStack output, DefaultedList<Ingredient> recipeItems) {
         this.id = id;
-    }
-    public Ingredient getInputA() {
-        return inputA;
-    }
-
-    public Ingredient getInputB() {
-        return inputB;
-    }
-    public Ingredient getInputC() {
-        return inputC;
-    }
-    public Ingredient getInputD() {
-        return inputD;
-    }
-    public Ingredient getInputE() {
-        return inputE;
+        this.output = output;
+        this.recipeItems = recipeItems;
     }
 
     @Override
     public boolean matches(SimpleInventory inventory, World world) {
+        if(world.isClient()) { return false; }
 
-        if (inventory.size() < 5) return false;
+        if(recipeItems.get(0).test(inventory.getStack(0))) {
+            return recipeItems.get(1).test(inventory.getStack(1));
+        }
 
-        return inputA.test(inventory.getStack(0)) && inputB.test(inventory.getStack(1))
-                && inputC.test(inventory.getStack(2))&& inputD.test(inventory.getStack(3))
-                && inputE.test(inventory.getStack(4));
+        return false;
     }
 
-
-
     @Override
-    public ItemStack craft(SimpleInventory inv) {
-        return this.getOutput().copy();
+    public ItemStack craft(SimpleInventory inventory) {
+        return output;
     }
 
     @Override
     public boolean fits(int width, int height) {
         return true;
     }
+
     @Override
     public ItemStack getOutput() {
-        return this.result;
+        return output.copy();
     }
 
     @Override
@@ -86,7 +55,7 @@ public class KegRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KegRecipeSerializer.INSTANCE;
+        return Serializer.INSTANCE;
     }
 
     @Override
@@ -100,62 +69,44 @@ public class KegRecipe implements Recipe<SimpleInventory> {
         public static final String ID = "keg";
     }
 
-
-    class KegRecipeJsonFormat {
-        JsonObject inputA;
-        JsonObject inputB;
-        JsonObject inputC;
-        JsonObject inputD;
-        JsonObject inputE;
-        String outputItem;
-        int outputAmount;
-    }
-
-
-    public static class KegRecipeSerializer implements RecipeSerializer<KegRecipe> {
-        private KegRecipeSerializer() {}
-
-        public static final KegRecipeSerializer INSTANCE = new KegRecipeSerializer();
-        public static final Identifier ID = new Identifier("keg");
+    public static class Serializer implements RecipeSerializer<KegRecipe> {
+        public static final Serializer INSTANCE = new Serializer();
+        public static final String ID = "keg";
+        // this is the name given in the json file
 
         @Override
-        public KegRecipe read(Identifier recipeId, JsonObject json) {
-            KegRecipeJsonFormat recipeJson = new Gson().fromJson(json, KegRecipeJsonFormat.class);
+        public KegRecipe read(Identifier id, JsonObject json) {
+            ItemStack output = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "output"));
 
-            // Ingredient easily turns JsonObjects of the correct format into Ingredients
-            Ingredient inputA = Ingredient.fromJson(recipeJson.inputA);
-            Ingredient inputB = Ingredient.fromJson(recipeJson.inputB);
-            Ingredient inputC = Ingredient.fromJson(recipeJson.inputC);
-            Ingredient inputD = Ingredient.fromJson(recipeJson.inputD);
-            Ingredient inputE = Ingredient.fromJson(recipeJson.inputE);
-            // The json will specify the item ID. We can get the Item instance based off of that from the Item registry.
-            Item outputItem = Registry.ITEM.getOrEmpty(new Identifier(recipeJson.outputItem)).get();
-            ItemStack output = new ItemStack(outputItem, recipeJson.outputAmount);
+            JsonArray ingredients = JsonHelper.getArray(json, "ingredients");
+            DefaultedList<Ingredient> inputs = DefaultedList.ofSize(2, Ingredient.EMPTY);
 
-            return new KegRecipe(inputA, inputB,inputC,inputD,inputE, output, recipeId);
+            for (int i = 0; i < inputs.size(); i++) {
+                inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
+            }
+
+            return new KegRecipe(id, output, inputs);
         }
 
         @Override
-        public void write(PacketByteBuf packetData, KegRecipe recipe) {
-            recipe.getInputA().write(packetData);
-            recipe.getInputB().write(packetData);
-            recipe.getInputC().write(packetData);
-            recipe.getInputD().write(packetData);
-            recipe.getInputE().write(packetData);
-            packetData.writeItemStack(recipe.getOutput());
+        public KegRecipe read(Identifier id, PacketByteBuf buf) {
+            DefaultedList<Ingredient> inputs = DefaultedList.ofSize(buf.readInt(), Ingredient.EMPTY);
+
+            for (int i = 0; i < inputs.size(); i++) {
+                inputs.set(i, Ingredient.fromPacket(buf));
+            }
+
+            ItemStack output = buf.readItemStack();
+            return new KegRecipe(id, output, inputs);
         }
 
         @Override
-        public KegRecipe read(Identifier recipeId, PacketByteBuf packetData) {
-            // Make sure the read in the same order you have written!
-            Ingredient inputA = Ingredient.fromPacket(packetData);
-            Ingredient inputB = Ingredient.fromPacket(packetData);
-            Ingredient inputC = Ingredient.fromPacket(packetData);
-            Ingredient inputD = Ingredient.fromPacket(packetData);
-            Ingredient inputE = Ingredient.fromPacket(packetData);
-            ItemStack output = packetData.readItemStack();
-            return new KegRecipe(inputA, inputB,inputC,inputD,inputE, output, recipeId);
+        public void write(PacketByteBuf buf, KegRecipe recipe) {
+            buf.writeInt(recipe.getIngredients().size());
+            for (Ingredient ing : recipe.getIngredients()) {
+                ing.write(buf);
+            }
+            buf.writeItemStack(recipe.getOutput());
         }
-
     }
 }

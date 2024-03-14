@@ -2,7 +2,6 @@ package net.carlo.justbeersmod.block.custom;
 
 import net.carlo.justbeersmod.block.entity.KegBlockEntity;
 import net.carlo.justbeersmod.block.entity.ModBlockEntities;
-import net.carlo.justbeersmod.recipe.KegRecipe;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;

@@ -17,8 +17,8 @@ public class JustBeersMod implements ModInitializer {
 	public void onInitialize() {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
-		ModRecipes.registerRecipes();
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerAllScreenHandlers();
+		ModRecipes.registerRecipes();
 	}
 }

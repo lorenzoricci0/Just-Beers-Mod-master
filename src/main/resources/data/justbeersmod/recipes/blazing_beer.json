@@ -2,13 +2,13 @@
   "type": "justbeersmod:keg",
   "ingredients": [
     {
-    "item": "justbeersmod:wheat_and_sugar_compound"
+    "item": "justbeersmod:blazing_compound"
     },
     {
       "item": "justbeersmod:mug"
     }
   ],
   "output": {
-    "item": "justbeersmod:wheat_beer"
+    "item": "justbeersmod:blazing_beer"
   }
 }

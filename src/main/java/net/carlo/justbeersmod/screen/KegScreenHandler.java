@@ -1,5 +1,6 @@
 package net.carlo.justbeersmod.screen;
 
+import net.carlo.justbeersmod.screen.slot.ModResultSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -14,25 +15,20 @@ public class KegScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
 
-    public KegScreenHandler(int syncId, PlayerInventory inventory){
-        this(syncId, inventory, new SimpleInventory(6), new ArrayPropertyDelegate(2));
+    public KegScreenHandler(int syncId, PlayerInventory playerInventory){
+        this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(2));
     }
 
     public KegScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate delegate) {
         super(ModScreenHandlers.KEG_SCREEN_HANDLER, syncId);
-        checkSize(inventory, 6);
+        checkSize(inventory, 3);
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
         this.propertyDelegate = delegate;
 
-        this.addSlot(new Slot(inventory, 0, 17, 17));
-        this.addSlot(new Slot(inventory, 1, 35, 17));
-        this.addSlot(new Slot(inventory, 2, 17, 35));
-        this.addSlot(new Slot(inventory, 3, 35, 35));
-        this.addSlot(new Slot(inventory, 4, 64, 48));
-        this.addSlot(new Slot(inventory, 5, 112, 32));
-
-
+        this.addSlot(new Slot(inventory, 0, 19, 40));
+        this.addSlot(new Slot(inventory, 1, 37, 40));
+        this.addSlot(new ModResultSlot(inventory, 2, 115, 40));
 
         addPlayerHotbar(playerInventory);
         addPlayerInventory(playerInventory);

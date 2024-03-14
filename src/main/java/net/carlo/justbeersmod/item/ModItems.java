@@ -30,6 +30,25 @@ public class ModItems {
     public static final Item BERRY_BEER = registerItem("berry_beer",
             new BeerItem(new FabricItemSettings().group(ModGroup.JUST_BEERS).food(ModFoodComponents.BERRY_BEER).maxCount(8)));
 
+    public static final Item WHEAT_AND_SUGAR_COMPOUND = registerItem("wheat_and_sugar_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item STRONG_COMPOUND = registerItem("strong_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item SWEET_COMPOUND = registerItem("sweet_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item MINER_COMPOUND = registerItem("miner_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item BLAZING_COMPOUND = registerItem("blazing_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item FROST_COMPOUND = registerItem("frost_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item APPLE_COMPOUND = registerItem("apple_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item PUMPKIN_COMPOUND = registerItem("pumpkin_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+    public static final Item BERRY_COMPOUND = registerItem("berry_compound",
+            new Item(new FabricItemSettings().group(ModGroup.JUST_BEERS)));
+
 
 
     private static Item registerItem(String name, Item item){

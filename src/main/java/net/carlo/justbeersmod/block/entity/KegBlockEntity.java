@@ -1,5 +1,6 @@
 package net.carlo.justbeersmod.block.entity;
 
+import net.carlo.justbeersmod.item.ModItems;
 import net.carlo.justbeersmod.recipe.KegRecipe;
 import net.carlo.justbeersmod.screen.KegScreenHandler;
 import net.minecraft.block.BlockState;
@@ -29,7 +30,6 @@ import java.util.Optional;
 public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
 
-    public static final int INVENTORY_SIZE = 6;
     public static final int WHEAT_SLOT= 1;
     public static final int SUGAR_SLOT = 2;
     public static final int WATER_SLOT = 3;
@@ -38,11 +38,11 @@ public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFac
     public static final int OUTPUT_SLOT = 5;
 
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(INVENTORY_SIZE, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
 
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
-    private int maxProgress = 900;
+    private int maxProgress = 100;
 
 
 
@@ -72,7 +72,7 @@ public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFac
 
     @Override
     public DefaultedList<ItemStack> getItems() {
-        return this.inventory;
+        return inventory;
     }
 
     @Override
@@ -104,67 +104,54 @@ public class KegBlockEntity extends BlockEntity implements NamedScreenHandlerFac
         this.progress = 0;
     }
 
-    public static void tick(World world, BlockPos blockPos, BlockState state, KegBlockEntity entity) {
-        if(world.isClient()) {
-            return;
-        }
-
+    public static void tick(World world, BlockPos pos, BlockState state, KegBlockEntity entity) {
         if(hasRecipe(entity)) {
             entity.progress++;
-            markDirty(world, blockPos, state);
-            if(entity.progress >= entity.maxProgress) {
+            if(entity.progress > entity.maxProgress) {
                 craftItem(entity);
             }
         } else {
             entity.resetProgress();
-            markDirty(world, blockPos, state);
         }
     }
 
-    private static void craftItem(KegBlockEntity entity) {
-        SimpleInventory inventory = new SimpleInventory(entity.size());
-        for (int i = 0; i < entity.size(); i++) {
+    private static void craftItem(KegBlockEntity entity) {World world = entity.world;
+        SimpleInventory inventory = new SimpleInventory(entity.inventory.size());
+        for (int i = 0; i < entity.inventory.size(); i++) {
             inventory.setStack(i, entity.getStack(i));
         }
-        Optional<KegRecipe> recipe = entity.getWorld().getRecipeManager()
-                .getFirstMatch(KegRecipe.Type.INSTANCE, inventory, entity.getWorld());
-        entity.removeStack(WHEAT_SLOT, 1);
-        entity.removeStack(SUGAR_SLOT, 1);
-        entity.removeStack(WATER_SLOT, 1);
-        entity.removeStack(INGREDIENT_SLOT, 1);
-        entity.removeStack(MUG_SLOT, 1);
-        entity.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput().getItem(),
-                entity.getStack(5).getCount() + 1));
-        entity.resetProgress();
+
+        Optional<KegRecipe> match = world.getRecipeManager()
+                .getFirstMatch(KegRecipe.Type.INSTANCE, inventory, world);
+
+        if(match.isPresent()) {
+            entity.removeStack(0,1);
+            entity.removeStack(1,1);
+
+            entity.setStack(2, new ItemStack(match.get().getOutput().getItem(),
+                    entity.getStack(2).getCount() + 1));
+
+            entity.resetProgress();
+        }
     }
 
     private static boolean hasRecipe(KegBlockEntity entity) {
-
-
-        if (!entity.getWorld().isClient()) {
-            // For the sake of simplicity we draw the items off of the player's hands and create an inventory from that.
-            // Usually you use an inventory of yours instead.
-            SimpleInventory inventory = new SimpleInventory(entity.size());
-            for (int i = 0; i < entity.size(); i++) {
-                inventory.setStack(i, entity.getStack(i));
-            }
-            // Or use .getAllMatches if you want all of the matches
-            Optional<KegRecipe> match = entity.getWorld().getRecipeManager()
-                    .getFirstMatch(KegRecipe.Type.INSTANCE, inventory, entity.getWorld());
-
-            if (match.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
-                    canInsertItemIntoOutputSlot(inventory, match.get().getOutput().getItem())) {
-                // Give the player the item and remove from what he has. Make sure to copy the ItemStack to not ruin it!
-                return true;
-            }
+        World world = entity.world;
+        SimpleInventory inventory = new SimpleInventory(entity.inventory.size());
+        for (int i = 0; i < entity.inventory.size(); i++) {
+            inventory.setStack(i, entity.getStack(i));
         }
 
-        return true;
+        Optional<KegRecipe> match = world.getRecipeManager()
+                .getFirstMatch(KegRecipe.Type.INSTANCE, inventory, world);
 
+        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+                && canInsertItemIntoOutputSlot(inventory, match.get().getOutput());
     }
 
-    private static boolean canInsertItemIntoOutputSlot(SimpleInventory inventory, Item output) {
-        return inventory.getStack(2).getItem() == output || inventory.getStack(2).isEmpty();
+
+    private static boolean canInsertItemIntoOutputSlot(SimpleInventory inventory, ItemStack output) {
+        return inventory.getStack(2).getItem() == output.getItem() || inventory.getStack(2).isEmpty();
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleInventory inventory) {
