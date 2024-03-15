@@ -5,11 +5,11 @@
       "item": "justbeersmod:wheat_and_sugar_compound"
     },
     {
-      "item": "minecraft:honey_bottle"
+      "item": "minecraft:sweet_berries"
     }
   ],
   "result": {
     "count": 1,
-    "item": "justbeersmod:strong_compound"
+    "item": "justbeersmod:berry_compound"
   }
 }
