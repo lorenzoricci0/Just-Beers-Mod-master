@@ -5,11 +5,11 @@
       "item": "justbeersmod:wheat_and_sugar_compound"
     },
     {
-      "item": "minecraft:wheat"
+      "item": "minecraft:diamond_pickaxe"
     }
   ],
   "result": {
     "count": 1,
-    "item": "justbeersmod:strong_compound"
+    "item": "justbeersmod:miner_compound"
   }
 }
